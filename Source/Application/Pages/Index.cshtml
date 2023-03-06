@@ -1,0 +1,68 @@
+﻿@page
+@model IndexModel
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>SQL-Server-Connection-Lab</title>
+		<link asp-append-version="true" href="~/Style/bootstrap.min.css" rel="stylesheet" />
+	</head>
+	<body>
+		<main class="container" role="main">
+			<h1>SQL-Server-Connection-Lab</h1>
+			<div class="alert alert-info">
+				<ul class="mb-0">
+					<li>OS: <strong>@System.Runtime.InteropServices.RuntimeInformation.OSDescription, @System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier</strong></li>
+					<li>Connection-string: <strong>@Model.MaskedConnectionString</strong></li>
+					<li>ConnectionStringBuilder-string: <strong>@Model.MaskedConnectionStringBuilderString</strong></li>
+					@if(!string.IsNullOrWhiteSpace(Model.CertificateSearch))
+					{
+						<li>Certificate-search: <strong>@Model.CertificateSearch</strong></li>
+					}
+				</ul>
+			</div>
+			<form class="border border-2 mb-3 p-3 rounded-2" method="post">
+				<div class="mb-3">
+					<label class="form-label" for="connect-timeout-input">Connect timeout</label>
+					<input class="form-control" id="connect-timeout-input" max="@byte.MaxValue" min="0" name="@nameof(Model.Form.ConnectTimeout)" type="number" value="@Model.Form.ConnectTimeout" />
+				</div>
+				<div class="mb-3">
+					<label class="form-label" for="encrypt-input">Encrypt</label>
+					<select asp-items="@Model.Form.Encrypts" class="form-select" id="encrypt-input" name="@nameof(Model.Form.Encrypt)"></select>
+				</div>
+				<div class="form-check mb-3">
+					<input checked="@(Model.Form.Pooling ? "checked" : null)" class="form-check-input" id="pooling-input" name="@nameof(Model.Form.Pooling)" type="checkbox" value="true" />
+					<label class="form-check-label" for="pooling-input">Pooling</label>
+				</div>
+				<div class="form-check mb-3">
+					<input checked="@(Model.Form.TrustServerCertificate ? "checked" : null)" class="form-check-input" id="trust-server-certificate-input" name="@nameof(Model.Form.TrustServerCertificate)" type="checkbox" value="true" />
+					<label class="form-check-label" for="trust-server-certificate-input">Trust server-certificate</label>
+				</div>
+				<div class="text-end">
+					<button class="btn btn-primary">Connect</button>
+					<a class="btn btn-secondary" href="/">Clear</a>
+				</div>
+			</form>
+			@if(Model.Exception != null)
+			{
+				<div class="alert alert-danger">
+					<ul class="mb-0">
+						<li>Duration: <strong>@Model.Duration</strong></li>
+						<li>Error: <strong>@Model.Exception</strong></li>
+					</ul>
+				</div>
+			}
+			else if(Model.Success != null)
+			{
+				<div class="alert alert-success">
+					<ul class="mb-0">
+						<li>Duration: <strong>@Model.Duration</strong></li>
+						<li>Success: <strong>@Model.Success</strong></li>
+					</ul>
+				</div>
+			}
+		</main>
+		<script asp-append-version="true" src="~/Scripts/bootstrap.bundle.min.js"></script>
+	</body>
+</html>
